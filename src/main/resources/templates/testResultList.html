@@ -30,7 +30,10 @@
                 <div class="col-lg-5">
                     <div class="card">
                         <div class="card-header">
-                            <h5><i class="fas fa-plus-circle"></i>Nuevo Resultado</h5>
+                            <h5><i class="fas fa-plus-circle"></i>
+                                <span th:if="${testResult.resultId != null}">Editar</span>
+                                <span th:unless="${testResult.resultId != null}">Nuevo</span> Resultado
+                            </h5>
                         </div>
                         <div class="card-body">
                             <form th:action="@{/dashboard/testResultSave}" method="post">
@@ -91,6 +94,7 @@
                                             <td th:text="${r.result}">-</td>
                                             <td th:text="${r.testDate}">-</td>
                                             <td>
+                                                <a th:href="@{/dashboard/editTestResult/{id}(id=${r.resultId})}" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
                                                 <a th:href="@{/dashboard/deleteTestResult/{id}(id=${r.resultId})}" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar?')"><i class="fas fa-trash"></i></a>
                                             </td>
                                         </tr>

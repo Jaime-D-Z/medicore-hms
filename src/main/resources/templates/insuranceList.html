@@ -30,7 +30,10 @@
                 <div class="col-lg-5">
                     <div class="card">
                         <div class="card-header">
-                            <h5><i class="fas fa-plus-circle"></i>Registro de Seguro</h5>
+                            <h5><i class="fas fa-plus-circle"></i>
+                                <span th:if="${insurance.insuranceId != null}">Editar</span>
+                                <span th:unless="${insurance.insuranceId != null}">Nuevo</span> Seguro
+                            </h5>
                         </div>
                         <div class="card-body">
                             <form th:action="@{/dashboard/insuranceSave}" method="post">
@@ -88,6 +91,7 @@
                                             <td th:text="${i.coverageType}">-</td>
                                             <td th:text="${i.endDate}">-</td>
                                             <td>
+                                                <a th:href="@{/dashboard/editInsurance/{id}(id=${i.insuranceId})}" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
                                                 <a th:href="@{/dashboard/deleteInsurance/{id}(id=${i.insuranceId})}" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar?')"><i class="fas fa-trash"></i></a>
                                             </td>
                                         </tr>

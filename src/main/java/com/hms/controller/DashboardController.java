@@ -44,18 +44,29 @@ public class DashboardController {
             model.addAttribute("totalPrescriptions", prescriptionService.count());
             model.addAttribute("totalBills", patientBillService.count());
             model.addAttribute("pendingBills", patientBillService.countByStatus("UNPAID"));
+            model.addAttribute("paidBills", patientBillService.countByStatus("PAID"));
             model.addAttribute("scheduledAppointments", appointmentService.countByStatus("SCHEDULED"));
+            model.addAttribute("completedAppointments", appointmentService.countByStatus("COMPLETED"));
+            model.addAttribute("cancelledAppointments", appointmentService.countByStatus("CANCELLED"));
             model.addAttribute("availableRooms", roomService.countAvailable());
+            model.addAttribute("totalRooms", roomService.countTotal());
             model.addAttribute("availableBeds", bedService.countAvailable());
+            model.addAttribute("occupiedBeds", bedService.countOccupied());
         } else if (isDoctor) {
             model.addAttribute("totalPatients", patientService.count());
             model.addAttribute("totalPrescriptions", prescriptionService.count());
             model.addAttribute("scheduledAppointments", appointmentService.countByStatus("SCHEDULED"));
+            model.addAttribute("completedAppointments", appointmentService.countByStatus("COMPLETED"));
+            model.addAttribute("cancelledAppointments", appointmentService.countByStatus("CANCELLED"));
         } else if (isNurse) {
             model.addAttribute("totalPatients", patientService.count());
             model.addAttribute("availableRooms", roomService.countAvailable());
+            model.addAttribute("totalRooms", roomService.countTotal());
             model.addAttribute("availableBeds", bedService.countAvailable());
+            model.addAttribute("occupiedBeds", bedService.countOccupied());
             model.addAttribute("scheduledAppointments", appointmentService.countByStatus("SCHEDULED"));
+            model.addAttribute("completedAppointments", appointmentService.countByStatus("COMPLETED"));
+            model.addAttribute("cancelledAppointments", appointmentService.countByStatus("CANCELLED"));
         }
         return "dashboard";
     }

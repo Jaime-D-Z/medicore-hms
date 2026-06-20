@@ -34,6 +34,14 @@ public class PaymentController {
         return "redirect:/dashboard/payments";
     }
 
+    @GetMapping("/dashboard/editPayment/{id}")
+    public String edit(@PathVariable int id, Model model) {
+        model.addAttribute("payment", service.getById(id));
+        model.addAttribute("payments", service.getAll());
+        model.addAttribute("bills", billService.getAll());
+        return "paymentList";
+    }
+
     @GetMapping("/dashboard/deletePayment/{id}")
     public String delete(@PathVariable int id, RedirectAttributes ra) {
         service.delete(id);

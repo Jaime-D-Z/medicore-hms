@@ -156,10 +156,153 @@
                     </div>
                 </div>
             </div>
+
+            <div class="row g-4 mt-2">
+                <div class="col-xl-4 col-md-6" sec:authorize="hasRole('ADMIN') or hasRole('DOCTOR') or hasRole('RECEPTIONIST') or hasRole('NURSE')">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-calendar-check"></i>Citas por Estado</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="chartAppointments" height="220"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-md-6" sec:authorize="hasRole('ADMIN') or hasRole('RECEPTIONIST')">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-file-invoice-dollar"></i>Facturas</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="chartBills" height="220"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-md-6" sec:authorize="hasRole('ADMIN') or hasRole('RECEPTIONIST') or hasRole('NURSE')">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-door-open"></i>Habitaciones</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="chartRooms" height="220"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-md-6" sec:authorize="hasRole('ADMIN') or hasRole('RECEPTIONIST') or hasRole('NURSE')">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-bed"></i>Camas</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="chartBeds" height="220"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var isAdmin = /*[[${isAdmin}]]*/ false;
+        var isReceptionist = /*[[${isReceptionist}]]*/ false;
+        var isDoctor = /*[[${isDoctor}]]*/ false;
+        var isNurse = /*[[${isNurse}]]*/ false;
+
+        var scheduled = /*[[${scheduledAppointments}]]*/ 0;
+        var completed = /*[[${completedAppointments}]]*/ 0;
+        var cancelled = /*[[${cancelledAppointments}]]*/ 0;
+
+        // ---- Citas por Estado (Donut) ----
+        if (document.getElementById('chartAppointments')) {
+            new Chart(document.getElementById('chartAppointments'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Programadas', 'Completadas', 'Canceladas'],
+                    datasets: [{
+                        data: [scheduled, completed, cancelled],
+                        backgroundColor: ['#f59e0b', '#10b981', '#ef4444'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true } }
+                    }
+                }
+            });
+        }
+
+        // ---- Facturas Pagadas vs Pendientes ----
+        if (document.getElementById('chartBills')) {
+            var paid = /*[[${paidBills}]]*/ 0;
+            var unpaid = /*[[${pendingBills}]]*/ 0;
+            new Chart(document.getElementById('chartBills'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pagadas', 'Pendientes'],
+                    datasets: [{
+                        data: [paid, unpaid],
+                        backgroundColor: ['#10b981', '#f59e0b'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true } }
+                    }
+                }
+            });
+        }
+
+        // ---- Habitaciones Disponibles vs Totales ----
+        if (document.getElementById('chartRooms')) {
+            var availRooms = /*[[${availableRooms}]]*/ 0;
+            var totalRooms = /*[[${totalRooms}]]*/ 0;
+            var occupiedRooms = totalRooms - availRooms;
+            new Chart(document.getElementById('chartRooms'), {
+                type: 'bar',
+                data: {
+                    labels: ['Habitaciones'],
+                    datasets: [
+                        { label: 'Disponibles', data: [availRooms], backgroundColor: '#10b981', borderRadius: 4 },
+                        { label: 'Ocupadas', data: [occupiedRooms], backgroundColor: '#f59e0b', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, ticks: { stepSize: 1 } } },
+                    plugins: { legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true } } }
+                }
+            });
+        }
+
+        // ---- Camas Disponibles vs Ocupadas ----
+        if (document.getElementById('chartBeds')) {
+            var availBeds = /*[[${availableBeds}]]*/ 0;
+            var occupBeds = /*[[${occupiedBeds}]]*/ 0;
+            new Chart(document.getElementById('chartBeds'), {
+                type: 'bar',
+                data: {
+                    labels: ['Camas'],
+                    datasets: [
+                        { label: 'Disponibles', data: [availBeds], backgroundColor: '#10b981', borderRadius: 4 },
+                        { label: 'Ocupadas', data: [occupBeds], backgroundColor: '#6366f1', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, ticks: { stepSize: 1 } } },
+                    plugins: { legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true } } }
+                }
+            });
+        }
+    });
+    </script>
 </body>
 </html>

@@ -36,7 +36,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/about", "/service", "/feature", "/team", "/testimonial",
                     "/contact", "/appointment", "/signin", "/createaccount", "/createuser",
-                    "/css/**", "/js/**", "/lib/**", "/img/**", "/fonts/**", "/webjars/**").permitAll()
+                    "/css/**", "/js/**", "/lib/**", "/img/**", "/fonts/**", "/webjars/**",
+                    "/.well-known/**").permitAll()
                 .requestMatchers("/dashboard/**").authenticated()
                 .requestMatchers("/dashboard/dRegistration/**", "/dashboard/doctorList",
                     "/dashboard/medicines/**", "/dashboard/stock/**", "/dashboard/suppliers/**",

@@ -39,6 +39,15 @@ public class MedicalRecordController {
         return "redirect:/dashboard/medicalRecords";
     }
 
+    @GetMapping("/dashboard/editMedicalRecord/{id}")
+    public String edit(@PathVariable int id, Model model) {
+        model.addAttribute("record", service.getById(id));
+        model.addAttribute("records", service.getAll());
+        model.addAttribute("patients", patientService.getAllPatients());
+        model.addAttribute("doctors", doctorService.getAllDoctors());
+        return "medicalRecordList";
+    }
+
     @GetMapping("/dashboard/deleteMedicalRecord/{id}")
     public String delete(@PathVariable int id, RedirectAttributes ra) {
         service.delete(id);

@@ -129,6 +129,21 @@ sequenceDiagram
 
 ---
 
+## 🖼️ Screenshots
+
+> Para agregar capturas: tomá una foto de la pantalla, guardala en `screenshots/` como `.png`.
+
+### Inicio de Sesión
+![Login](screenshots/login.png)
+
+### Dashboard del Administrador
+![Dashboard Admin](screenshots/dashboard.png)
+
+### Pantalla Principal (Landing Page)
+![Pantalla Principal](screenshots/pantalla_principal_2.png)
+
+---
+
 ## 🛠️ Tech Stack
 
 | Layer | Technology |

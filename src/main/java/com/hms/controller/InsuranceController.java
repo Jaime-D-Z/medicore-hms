@@ -34,6 +34,14 @@ public class InsuranceController {
         return "redirect:/dashboard/insurances";
     }
 
+    @GetMapping("/dashboard/editInsurance/{id}")
+    public String edit(@PathVariable int id, Model model) {
+        model.addAttribute("insurance", service.getById(id));
+        model.addAttribute("insurances", service.getAll());
+        model.addAttribute("patients", patientService.getAllPatients());
+        return "insuranceList";
+    }
+
     @GetMapping("/dashboard/deleteInsurance/{id}")
     public String delete(@PathVariable int id, RedirectAttributes ra) {
         service.delete(id);

@@ -44,6 +44,16 @@ public class TestResultController {
         return "redirect:/dashboard/testResults";
     }
 
+    @GetMapping("/dashboard/editTestResult/{id}")
+    public String edit(@PathVariable int id, Model model) {
+        model.addAttribute("testResult", service.getById(id));
+        model.addAttribute("results", service.getAll());
+        model.addAttribute("labTests", labTestService.getAll());
+        model.addAttribute("patients", patientService.getAllPatients());
+        model.addAttribute("doctors", doctorService.getAllDoctors());
+        return "testResultList";
+    }
+
     @GetMapping("/dashboard/deleteTestResult/{id}")
     public String delete(@PathVariable int id, RedirectAttributes ra) {
         service.delete(id);
