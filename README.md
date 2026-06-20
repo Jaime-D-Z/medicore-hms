@@ -324,4 +324,28 @@ This project is licensed under the **MIT License**.
 
 ---
 
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 📋 Code of Conduct
+
+Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+
+---
+
+## 🔒 Security
+
+If you discover any security-related issues, please email the project maintainer instead of using the issue tracker.
+
+---
+
 > Built with Spring Boot 3.2 · Java 17 · MySQL 8
