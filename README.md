@@ -34,6 +34,101 @@ Four roles with distinct dashboards and permissions:
 
 ---
 
+## 📊 Use Cases
+
+### 👤 Actor — Role Mapping
+
+| Actor | System Role |
+|-------|------------|
+| **Administrador** | ADMIN — full system control |
+| **Médico** | DOCTOR — clinical workflows |
+| **Enfermera(o)** | NURSE — patient and bed management |
+| **Recepcionista** | RECEPTIONIST — registration, appointments, billing |
+
+### 🎯 Core Use Cases
+
+```mermaid
+graph TD
+    subgraph "Sistema de Gestión Hospitalaria (HMS)"
+        A[Gestionar Pacientes] --> A1[Registrar Paciente]
+        A --> A2[Buscar Paciente]
+        A --> A3[Editar/Ver Historia]
+
+        B[Gestionar Citas] --> B1[Agendar Cita]
+        B --> B2[Completar/Eliminar Cita]
+        B --> B3[Ver Calendario]
+
+        C[Gestionar Consultas] --> C1[Crear Receta]
+        C --> C2[Registrar Notas Médicas]
+        C --> C3[Solicitar Exámenes]
+
+        D[Gestionar Facturación] --> D1[Generar Factura]
+        D --> D2[Registrar Pago]
+        D --> D3[Ver Historial de Pagos]
+
+        E[Gestionar Inventario] --> E1[Agregar Medicamento]
+        E --> E2[Controlar Stock]
+        E --> E3[Gestionar Proveedores]
+
+        F[Gestionar Habitaciones] --> F1[Asignar Cama]
+        F --> F2[Liberar Cama]
+        F --> F3[Ver Disponibilidad]
+    end
+
+    ADMIN --> A & B & C & D & E & F
+    DOCTOR --> B & C
+    NURSE --> F
+    RECEPTIONIST --> A & B & D
+```
+
+### 🔄 Flujo — Agendar Cita (Público)
+
+```mermaid
+sequenceDiagram
+    actor P as Paciente
+    participant S as Sistema
+    participant DB as Base de Datos
+
+    P->>S: Accede a /appointment
+    S->>DB: Obtener lista de médicos
+    DB-->>S: Médicos disponibles
+    S-->>P: Formulario con médicos, fecha y hora
+
+    P->>S: Envía datos (nombre, email, médico, fecha, hora)
+    S->>S: Crea registro Patient
+    S->>S: Crea registro Appointment
+    S->>DB: Guarda paciente y cita
+    DB-->>S: OK
+    S-->>P: Redirige con mensaje de éxito ✓
+```
+
+### 🔄 Flujo — Atención al Paciente (Dashboard)
+
+```mermaid
+sequenceDiagram
+    actor R as Recepcionista
+    actor D as Médico
+    participant S as Sistema
+
+    R->>S: Registra paciente / agenda cita
+    S-->>R: Confirmación
+
+    D->>S: Inicia sesión → Dashboard
+    S-->>D: Citas del día, pacientes pendientes
+
+    D->>S: Abre expediente del paciente
+    S-->>D: Historia clínica, recetas anteriores
+
+    D->>S: Crea receta / nota médica
+    S-->>D: Confirmación
+
+    R->>S: Genera factura (consulta + medicinas + exámenes)
+    R->>S: Registra pago
+    S-->>R: Factura pagada ✓
+```
+
+---
+
 ## 🛠️ Tech Stack
 
 | Layer | Technology |
