@@ -1,15 +1,97 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="utf-8"><title>Payments - HMS</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"></head>
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Pagos - MediCore HMS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
 <body>
-<div th:replace="~{fragments/sidebar :: sidebar}"></div>
-<div class="main-content">
-<div class="topbar"><h4><i class="fas fa-credit-card" style="color:#13c5dd;margin-right:10px;"></i>Payments</h4><div class="user-info"><i class="fas fa-user-circle"></i> <span th:text="${#authentication.name}">User</span> <a href="/logout" class="ms-3 btn btn-sm btn-outline-danger"><i class="fas fa-sign-out-alt"></i> Logout</a></div></div>
-<div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show"><span th:text="${successMessage}"></span><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
-<div class="row">
-<div class="col-md-5"><div class="card"><div class="card-header bg-white"><h5 class="mb-0">Record Payment</h5></div><div class="card-body"><form th:action="@{/dashboard/paymentSave}" method="post"><input type="hidden" name="paymentId" th:value="${payment.paymentId}"><div class="mb-2"><label class="form-label">Bill</label><select name="billId" class="form-select" required><option value="">Select Bill</option><option th:each="b : ${bills}" th:value="${b.billId}" th:text="'Bill #' + ${b.billId} + ' - $' + ${b.totalCost}" th:selected="${payment.patientBill?.billId == b.billId}"></option></select></div><div class="mb-2"><label class="form-label">Amount</label><input type="number" step="0.01" name="amountPaid" class="form-control" th:value="${payment.amountPaid}" required></div><div class="mb-2"><label class="form-label">Method</label><select name="paymentMethod" class="form-select"><option value="CASH" th:selected="${payment.paymentMethod == 'CASH'}">Cash</option><option value="CARD" th:selected="${payment.paymentMethod == 'CARD'}">Card</option><option value="INSURANCE" th:selected="${payment.paymentMethod == 'INSURANCE'}">Insurance</option><option value="ONLINE" th:selected="${payment.paymentMethod == 'ONLINE'}">Online</option></select></div><button type="submit" class="btn btn-primary w-100"><i class="fas fa-save"></i> Record Payment</button></form></div></div></div>
-<div class="col-md-7"><div class="card"><div class="card-body"><div class="table-responsive"><table class="table table-hover"><thead><tr><th>Bill</th><th>Amount</th><th>Date</th><th>Method</th><th>Status</th><th>Actions</th></tr></thead><tbody><tr th:each="p : ${payments}"><td th:text="'#' + ${p.patientBill.billId}">#1</td><td th:text="${p.amountPaid}">0</td><td th:text="${p.paymentDate}">-</td><td th:text="${p.paymentMethod}">CASH</td><td><span th:text="${p.status}" class="badge bg-success">PAID</span></td><td><a th:href="@{/dashboard/deletePayment/{id}(id=${p.paymentId})}" class="btn btn-sm btn-danger" onclick="return confirm('Delete?')"><i class="fas fa-trash"></i></a></td></tr></tbody></table></div></div></div></div></div>
-</div>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main-content">
+        <div class="topbar">
+            <h4><i class="fas fa-credit-card"></i>Pagos</h4>
+            <div class="user-info">
+                <i class="fas fa-user-circle"></i>
+                <span th:text="${#authentication.name}">Usuario</span>
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <button type="submit" class="btn btn-sm btn-outline-danger ms-2"><i class="fas fa-sign-out-alt"></i> Salir</button>
+                </form>
+            </div>
+        </div>
+        <div style="padding: 24px 30px;">
+            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show">
+                <span th:text="${successMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-plus-circle"></i>Registrar Pago</h5>
+                        </div>
+                        <div class="card-body">
+                            <form th:action="@{/dashboard/paymentSave}" method="post">
+                                <input type="hidden" name="paymentId" th:value="${payment.paymentId}">
+                                <div class="mb-3">
+                                    <label class="form-label">Factura</label>
+                                    <select name="billId" class="form-select" required>
+                                        <option value="">Seleccionar Factura</option>
+                                        <option th:each="b : ${bills}" th:value="${b.billId}" th:text="'Factura #' + ${b.billId} + ' - $' + ${b.totalCost}" th:selected="${payment.patientBill?.billId == b.billId}"></option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Monto</label>
+                                    <input type="number" step="0.01" name="amountPaid" class="form-control" th:value="${payment.amountPaid}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Método</label>
+                                    <select name="paymentMethod" class="form-select">
+                                        <option value="CASH" th:selected="${payment.paymentMethod == 'CASH'}">Efectivo</option>
+                                        <option value="CARD" th:selected="${payment.paymentMethod == 'CARD'}">Tarjeta</option>
+                                        <option value="INSURANCE" th:selected="${payment.paymentMethod == 'INSURANCE'}">Seguro</option>
+                                        <option value="ONLINE" th:selected="${payment.paymentMethod == 'ONLINE'}">En Línea</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100"><i class="fas fa-save"></i> Registrar Pago</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-list"></i>Historial de Pagos</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead>
+                                        <tr><th>Factura</th><th>Monto</th><th>Fecha</th><th>Método</th><th>Estado</th><th>Acciones</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="p : ${payments}">
+                                            <td th:text="'#' + ${p.patientBill.billId}">#1</td>
+                                            <td th:text="${p.amountPaid}">0</td>
+                                            <td th:text="${p.paymentDate}">-</td>
+                                            <td th:text="${p.paymentMethod}">CASH</td>
+                                            <td><span th:text="${p.status}" class="badge bg-success">PAID</span></td>
+                                            <td>
+                                                <a th:href="@{/dashboard/deletePayment/{id}(id=${p.paymentId})}" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar?')"><i class="fas fa-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

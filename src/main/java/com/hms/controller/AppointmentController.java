@@ -1,5 +1,7 @@
 package com.hms.controller;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.hms.entity.Appointment;
+import com.hms.entity.Patient;
 import com.hms.service.AppointmentService;
 import com.hms.service.PatientService;
 import com.hms.service.DoctorService;
@@ -70,5 +73,35 @@ public class AppointmentController {
         if (a != null) { a.setStatus("CANCELLED"); service.save(a); }
         ra.addFlashAttribute("successMessage", "Appointment cancelled");
         return "redirect:/dashboard/appointments";
+    }
+
+    @PostMapping("/appointment")
+    public String bookAppointment(
+            @RequestParam("name") String name,
+            @RequestParam("email") String email,
+            @RequestParam("phone") String phone,
+            @RequestParam("doctorId") int doctorId,
+            @RequestParam("date") String date,
+            @RequestParam("time") String time,
+            @RequestParam("reason") String reason,
+            RedirectAttributes ra) {
+        Patient patient = new Patient();
+        patient.setPatientName(name);
+        patient.setEmail(email);
+        patient.setPhone(phone);
+        patient.setAdmissionDate(java.sql.Date.valueOf(LocalDate.now()));
+        patientService.addPatient(patient);
+
+        Appointment apt = new Appointment();
+        apt.setPatient(patient);
+        apt.setDoctor(doctorService.getDoctorById(doctorId));
+        apt.setAppointmentDate(LocalDate.parse(date));
+        apt.setAppointmentTime(LocalTime.parse(time));
+        apt.setReason(reason);
+        apt.setStatus("SCHEDULED");
+        service.save(apt);
+
+        ra.addFlashAttribute("successMessage", "Cita agendada exitosamente");
+        return "redirect:/appointment";
     }
 }

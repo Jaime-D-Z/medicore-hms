@@ -35,12 +35,12 @@ INSERT INTO user_role (user_id, role_id) VALUES
 (4, 3),  -- nurse.amy -> NURSE
 (5, 4);  -- reception.claire -> RECEPTIONIST
 
--- 5. DOCTOR (references department)
+-- 5. DOCTOR (references department) — ordenado mujer/hombre alternado
 INSERT INTO doctor (d_name, specialization, consult_charge, salary, dept_id) VALUES
-('Dr. John Smith', 'Cardiology', 500.00, 180000.00, 1),
 ('Dr. Maria Garcia', 'Pediatrics', 400.00, 160000.00, 2),
-('Dr. Robert Chen', 'Orthopedics', 450.00, 170000.00, 3),
+('Dr. John Smith', 'Cardiology', 500.00, 180000.00, 1),
 ('Dr. Sarah Williams', 'Neurology', 600.00, 200000.00, 4),
+('Dr. Robert Chen', 'Orthopedics', 450.00, 170000.00, 3),
 ('Dr. James Wilson', 'General Medicine', 350.00, 150000.00, 5);
 
 -- 6. PATIENT (independent)

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.hms.entity.Role;
 import com.hms.entity.User;
 import com.hms.repository.RoleRepo;
+import com.hms.service.DoctorService;
 import com.hms.service.UserService;
 
 @Controller
@@ -22,6 +23,9 @@ public class UserController {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private DoctorService doctorService;
 
     @GetMapping("/")
     public String home() { return "index"; }
@@ -39,13 +43,19 @@ public class UserController {
     public String contact() { return "contact"; }
 
     @GetMapping("/appointment")
-    public String appointment() { return "appointment"; }
+    public String appointment(Model model) {
+        model.addAttribute("doctors", doctorService.getAllDoctors());
+        return "appointment";
+    }
 
     @GetMapping("/feature")
     public String feature() { return "feature"; }
 
     @GetMapping("/team")
-    public String team() { return "team"; }
+    public String team(Model model) {
+        model.addAttribute("doctors", doctorService.getAllDoctors());
+        return "team";
+    }
 
     @GetMapping("/testimonial")
     public String testimonial() { return "testimonial"; }
