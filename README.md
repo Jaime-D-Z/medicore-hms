@@ -131,7 +131,6 @@ sequenceDiagram
 
 ## 🖼️ Screenshots
 
-> Para agregar capturas: tomá una foto de la pantalla, guardala en `screenshots/` como `.png`.
 
 ### Inicio de Sesión
 ![Login](screenshots/login.png)
@@ -140,7 +139,7 @@ sequenceDiagram
 ![Dashboard Admin](screenshots/dashboard.png)
 
 ### Pantalla Principal (Landing Page)
-![Pantalla Principal](screenshots/pantalla_principal_2.png)
+![Pantalla Principal](screenshots/pantalla_principal.png) 
 
 ---
 
